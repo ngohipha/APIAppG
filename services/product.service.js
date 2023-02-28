@@ -22,7 +22,7 @@ async function createProduct(params, callback) {
   const productModel = new product(params);
   productModel
     .save()
-    .then((reponse) => {
+    .then((response) => {
       return callback(null, response);
     })
     .catch((error) => {
@@ -49,7 +49,7 @@ async function getProducts(params, callback) {
   product
     .find(
       condition,
-      "productId productName productShortDescription productPrice productSalePrice productImage productImage productSKU productType stockStatus"
+      "productId productName productShortDescription productPrice productSalePrice productImage productSKU productType stockStatus"
     )
     .populate("category", "categoryName categoryImage")
     .limit(perPage)
