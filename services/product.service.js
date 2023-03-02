@@ -41,7 +41,7 @@ async function getProducts(params, callback) {
     };
   }
   if (categoryId) {
-    condition["categoryId"] = categoryId;
+    condition["category"] = categoryId;
   }
   let perPage = Math.abs(params.pageSize) || MONGO_DB_CONFIG.PAGE_SIZE;
   let page = (Math.abs(params.page) || 1) - 1;
@@ -49,8 +49,9 @@ async function getProducts(params, callback) {
   product
     .find(
       condition,
-      "productId productName productShortDescription productPrice productSalePrice productImage productSKU productType stockStatus"
+      "productId productName productShortDescription productPrice productSalePrice productImage productSKU productType stockStatus createdAt updatedAt"
     )
+    .sort(params.sort)
     .populate("category", "categoryName categoryImage")
     .limit(perPage)
     .skip(perPage * page)
@@ -92,25 +93,24 @@ async function updateProduct(params, callback) {
 }
 
 async function deleteProduct(params, callback) {
-    const productId = params.productId;
-  
-    product
-      .findByIdAndDelete(productId)
-      .then((response) => {
-        if (!response) {
-          callback(`Cannot update Product with id ${productId}`);
-        } else callback(null, response);
-      })
-      .catch((error) => {
-        return callback(error);
-      });
-  }
+  const productId = params.productId;
 
-  module.exports = {
-    createProduct,
-    getProducts,
-    getProductById,
-    updateProduct,
-    deleteProduct,
+  product
+    .findByIdAndDelete(productId)
+    .then((response) => {
+      if (!response) {
+        callback(`Cannot update Product with id ${productId}`);
+      } else callback(null, response);
+    })
+    .catch((error) => {
+      return callback(error);
+    });
+}
 
-  }
+module.exports = {
+  createProduct,
+  getProducts,
+  getProductById,
+  updateProduct,
+  deleteProduct,
+};

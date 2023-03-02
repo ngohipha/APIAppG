@@ -54,8 +54,8 @@ const product = mongoose.model(
           ret.productId = ret._id.toString();
           delete ret._id;
           delete ret.__v;
-        },
-      },
+        }
+      }
     }
   )
 );
