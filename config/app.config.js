@@ -1,5 +1,5 @@
 const MONGO_DB_CONFIG = {
-    DB: "mongodb+srv://admin:admin@cluster0.mdqmvq5.mongodb.net/?retryWrites=true&w=majority",
+    DB: "mongodb+srv://admin:admin@admin.c2mzeja.mongodb.net/?retryWrites=true&w=majority",
     PAGE_SIZE : 10,
 };
 
