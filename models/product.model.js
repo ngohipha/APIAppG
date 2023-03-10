@@ -46,9 +46,16 @@ const product = mongoose.model(
         type: String,
         default: "IN",
       },
-      // sua doi json , bat cu khi nao nhan bat ky json nao tu mo hinh nay chuyen doi phan hoi cho rang chung dat vao json
+      relatedProducts: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "RelatedProduct",
+        }
+      ]
     },
     {
+            // sua doi json , bat cu khi nao nhan bat ky json nao tu mo hinh nay chuyen doi phan hoi cho rang chung dat vao json
+
       toJSON: {
         transform: function (doc, ret) {
           ret.productId = ret._id.toString();

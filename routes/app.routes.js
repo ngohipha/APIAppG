@@ -2,6 +2,8 @@ const categoryController = require("../controllers/categories.controller");
 const productController = require("../controllers/product.controller");
 const userController = require("../controllers/user.controller");
 const sliderController = require("../controllers/slider.controller");
+const relatedProductController = require("../controllers/related_product.controller");
+
 
 const express = require("express");
 const router = express.Router();
@@ -51,5 +53,8 @@ router.put("/slider/:id", sliderController.update);
 
 //  Delete a Product with id
 router.delete("/slider/:id", sliderController.delete);
+
+router.post("/relatedProduct", relatedProductController.create );
+router.delete("/relatedProduct/:id" , relatedProductController.delete);
 
 module.exports = router;
