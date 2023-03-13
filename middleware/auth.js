@@ -2,16 +2,21 @@ const jwt = require("jsonwebtoken");
 
 const TOKEN_KEY = "RANDOM_KEY";
 
-function authenticationToken (req, res , next){
+function authenticateToken (req, res , next){
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
 
-    if (token == null ) return res.sendStatus(401);
-    jwt.verify(token,TOKEN_KEY ,(err,user) =>{
-        if(err) return res.sendStatus(403);
-        req.user = user;
-        next();
-    })
+    // if (token == null ) return res.sendStatus(401);
+    
+    if(!token){
+        return res.status(405).send({message: "No Token Provded!"});
+    }
+        jwt.verify(token,TOKEN_KEY , (err, user)=> {
+            if(err) return res.status(401).send({message: "Unauthoriezed!"});
+            req.user = user.data;
+            next();
+        });
+        
 }
 
 function generateAccessToken(userModel){
@@ -20,6 +25,6 @@ function generateAccessToken(userModel){
     });
 }
 module.exports = {
-    authenticationToken,
+    authenticateToken,
     generateAccessToken,
 }
