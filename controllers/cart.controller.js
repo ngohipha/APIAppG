@@ -28,7 +28,6 @@ exports.findAll = (req, res, next) => {
   });
 };
 
-
 exports.delete = async (req, res, next) => {
   try {
     const userId = req.user.userId;

@@ -1,3 +1,4 @@
+const { response } = require("express");
 const { cart } = require("../models/cart.model");
 var async = require("async");
 
@@ -19,30 +20,29 @@ async function addCart(params, callback) {
       });
       const response = await cartModel.save();
       return callback(null, response);
-    }
-
-    else if (cartDB.products.length == 0) {
+    } else if (cartDB.products.length == 0) {
       cartDB.products = params.products;
       await cartDB.save();
       return callback(null, cartDB);
     } else {
-      // Nếu nhưparams.productsmảngmapchức năngfindIndexchức năngproductVàqtycủa cảicartDB.productsmảngsavechức năngqtytài sảncartDB.productsmảngqtycủaparams.productsmảngsavechức năng 
-      await Promise.all(params.products.map(async (product) => {
-        let itemIndex = cartDB.products.findIndex(
-          p => p.product == product.product
-        );
-        if (itemIndex === -1) {
-          cartDB.products.push({
-            product: product.product,
-            qty: product.qty,
-          });
-          await cartDB.save();
-        }
-        else {
-          cartDB.products[itemIndex].qty += product.qty;
-          await cartDB.save();
-        }
-      }));
+      // Nếu nhưparams.productsmảngmapchức năngfindIndexchức năngproductVàqtycủa cảicartDB.productsmảngsavechức năngqtytài sảncartDB.productsmảngqtycủaparams.productsmảngsavechức năng
+      await Promise.all(
+        params.products.map(async (product) => {
+          let itemIndex = cartDB.products.findIndex(
+            (p) => p.product == product.product
+          );
+          if (itemIndex === -1) {
+            cartDB.products.push({
+              product: product.product,
+              qty: product.qty,
+            });
+            await cartDB.save();
+          } else {
+            cartDB.products[itemIndex].qty += product.qty;
+            await cartDB.save();
+          }
+        })
+      );
       return callback(null, cartDB);
     }
   } catch (err) {
@@ -50,26 +50,25 @@ async function addCart(params, callback) {
   }
 }
 
-async function getCart(params, callback) {
-  try {
-    const response = await cart.findOne({ userId: params.userId })
-      .populate({
-        path: "products",
+async function getCart(params, callback ) {
+  const response = await cart.findOne({ userId: params.userId })
+    .populate({
+      path: "products",
+      populate: {
+        path: "product",
+        model: "Product",
+        select: "productName productPrice productSalePrice productImage",
         populate: {
-          path: "product",
-          model: "Product",
-          select: "productName productPrice productSalePrice productImage",
-          populate: {
-            path: "category",
-            model: "Category",
-            select: "categoryName",
-          },
+          path: "category",
+          model: "Category",
+          select: "categoryName",
         },
-      });
-    return callback(null, response);
-  } catch (error) {
-    return callback(error);
-  }
+      },
+    }).then((response)=>{
+      return callback(null,response);
+    }).catch((error)=>{
+      return callback(error);
+    });
 }
 
 async function removeCartItem(params) {

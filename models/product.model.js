@@ -57,11 +57,13 @@ const product = mongoose.model(
             // sua doi json , bat cu khi nao nhan bat ky json nao tu mo hinh nay chuyen doi phan hoi cho rang chung dat vao json
 
       toJSON: {
-        transform: function (doc, ret) {
-          ret.productId = ret._id.toString();
-          delete ret._id;
-          delete ret.__v;
-        }
+        transform: function (doc,ret){
+          if (ret._id) {
+              ret.productId = ret._id.toString();
+              delete ret._id;
+          }
+          delete ret._v;
+      }
       }
     }
   )
